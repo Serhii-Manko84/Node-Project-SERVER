@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
-async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/demo");
-  console.log("db connection");
-}
+const { MONGODB_CONNECT_URI, PORT = 5000 } = process.env;
 
-main().catch((error) => console.log(error));
+mongoose
+  .connect(MONGODB_CONNECT_URI)
+  .then(() => console.log("Database connection successful"))
+  .catch((error) => {
+    console.log("Database connection error:", error.message);
+    process.exit(1);
+  });
 
 const projectSchema = new mongoose.Schema({
   customer: String,
@@ -21,4 +25,4 @@ const customerSchema = new mongoose.Schema({
 
 const Customer = mongoose.model("Customers", customerSchema);
 
-module.exports = { main, Project, Customer };
+module.exports = { Project, Customer };
